@@ -1,8 +1,10 @@
 using System;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
+using UnityEngine.Events;
 
 [Serializable]
 public struct CameraPositionDetails 
@@ -26,6 +28,13 @@ public struct CameraPositionDetails
 
 public class DynamicMenuManager : MonoBehaviour
 {
+    //create events that are called on begin and on finished of camera animation
+    [HideInInspector]
+    public UnityEvent<int> Event_CameraAnimationFinished;
+    [HideInInspector]
+    public UnityEvent<int> Event_CameraAnimationStarted;
+
+
     [Header("Camera Animation & Positions")]
     //list of animations for the camera to move between
     [SerializeField] private CameraPositionDetails[] cameraAnimationDetails;
@@ -50,12 +59,23 @@ public class DynamicMenuManager : MonoBehaviour
     //animation details
     //journey of animation between 0 and 1
     private float animationJourney = 1;
+
     //starting position of animation
-    private Transform currentStartingPosition;
+    private Vector3 currentStartingPosition;
+    private Quaternion currentStartingRotation;
+
     //ending position of animation
     private CameraPositionDetails currentTargetPosition;
     //store to prevent recreating variable each frame
     private float updatedJourneyFromAnimationCurve;
+
+    //bool to say if animation is completed
+    private bool animationCompleted;
+
+    //animation index passed events based on completion
+    private int currentAnimatingAnimationIndex = -1;
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -89,35 +109,68 @@ public class DynamicMenuManager : MonoBehaviour
         //set camera in starting position
         menuCamera.transform.position = cameraAnimationDetails[0].targetPosition.transform.position;
         menuCamera.transform.rotation = cameraAnimationDetails[0].targetPosition.transform.rotation;
+
+        //testing remove
+        //AnimateToPosition(1);
     }
 
 
 
     private void LateUpdate()
     {
-        if (!updateCameraPositionAfterAnimationCompleted && animationJourney == 1) return;
+        //check if the camera should update every frame
+        if (!updateCameraPositionAfterAnimationCompleted && animationJourney == 1 || currentTargetPosition.targetPosition == null) return;
         
         //increment time of lerp based on time
-        animationJourney += Time.deltaTime/currentTargetPosition.transitionTimeInSeconds;
+        animationJourney = Mathf.Clamp(animationJourney + Time.deltaTime/currentTargetPosition.transitionTimeInSeconds, 0, 1);
 
         //create new journey
         updatedJourneyFromAnimationCurve = currentTargetPosition.lerpAnimationCurve.Evaluate(animationJourney);
 
+        
+
         //move camera to position
-        menuCamera.transform.position = Vector3.Lerp(currentStartingPosition.position, currentTargetPosition.targetPosition.transform.position, updatedJourneyFromAnimationCurve);
-        menuCamera.transform.rotation = Quaternion.Lerp(currentStartingPosition.rotation, currentTargetPosition.targetPosition.transform.rotation, updatedJourneyFromAnimationCurve);
+        //menuCamera.transform.position = Vector3.Lerp(currentStartingPosition.position, currentTargetPosition.targetPosition.transform.position, updatedJourneyFromAnimationCurve);
+        menuCamera.transform.position = Vector3.LerpUnclamped(currentStartingPosition, currentTargetPosition.targetPosition.transform.position, updatedJourneyFromAnimationCurve);
+        menuCamera.transform.rotation = Quaternion.LerpUnclamped(currentStartingRotation, currentTargetPosition.targetPosition.transform.rotation, updatedJourneyFromAnimationCurve);
+
+        if (animationJourney >= 1 && !animationCompleted)
+        {
+            animationJourney = 1;
+            animationCompleted = true;
+            Event_CameraAnimationFinished.Invoke(currentAnimatingAnimationIndex);
+        }
     }
 
 
 
     public void ReturnCameraToMain()
     {
-        MoveCameraToPosition(defaultMainScreenIndex);
+        AnimateToPosition(defaultMainScreenIndex);
+    }
+
+    //animate to position using camera position details
+    public void AnimateToPosition(CameraPositionDetails positionDetails, int completedCameraAnimation = -1)
+    {
+        //set up event data
+        currentAnimatingAnimationIndex = completedCameraAnimation;
+        Event_CameraAnimationStarted.Invoke(currentAnimatingAnimationIndex);
+
+        //reset journey to 0
+        animationJourney = 0;
+        SetStartingTransform(menuCamera.transform);
+        currentTargetPosition = positionDetails;
+        animationCompleted = false;
+    }
+
+    public void SetStartingTransform(Transform newTransform)
+    {
+        currentStartingPosition = newTransform.position;
+        currentStartingRotation = newTransform.rotation;
     }
 
 
-
-    public void MoveCameraToPosition(int cameraPosition)
+    public void AnimateToPosition(int cameraPosition)
     {
         if (cameraPosition >= cameraAnimationDetails.Length)
         {
@@ -125,25 +178,10 @@ public class DynamicMenuManager : MonoBehaviour
             return;
         }
 
-        //reset journey to 0
-        animationJourney = 0;
-        currentStartingPosition = menuCamera.transform;
-        currentTargetPosition = cameraAnimationDetails[cameraPosition];
+        AnimateToPosition(cameraAnimationDetails[cameraPosition], cameraPosition);
     }
 
 
-    //animate to position using camera position details
-    public void AnimateToPosition(CameraPositionDetails positionDetails)
-    {
-        //reset journey to 0
-        animationJourney = 0;
-        currentStartingPosition = menuCamera.transform;
-        currentTargetPosition = positionDetails;
-    }
-
-
-
-    
     //Allow custom animation to position using animation struct
 
 
