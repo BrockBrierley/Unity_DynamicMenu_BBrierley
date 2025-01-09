@@ -9,6 +9,14 @@ using UnityEngine.Events;
 [Serializable]
 public struct CameraPositionDetails 
 {
+    public enum soundType
+    {
+        Open,
+        Close,
+        Other,
+        Custom
+    }
+
     //set position name, not used programmatically but allows
     //for easier identifying when looking at string
     public string PositionName;
@@ -23,6 +31,14 @@ public struct CameraPositionDetails
 
     //animation curve used to add in animation effects
     public AnimationCurve lerpAnimationCurve;
+
+    //Select sound enum to create simple consistent audio
+    [Header("Sounds")]
+    public soundType selectSoundType;
+
+    //or choose custom and add sounds below
+    [Header("Add sounds below for custom per animation")]
+    public AudioClip[] sounds;
 };
 
 
