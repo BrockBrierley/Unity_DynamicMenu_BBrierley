@@ -46,8 +46,16 @@ public class DynamicMenuManager : MonoBehaviour
     //Private variables
     //not a const but kept same convention as it is intended not to change
     private AnimationCurve DEFAULT_ANIMATION_CURVE = new AnimationCurve(new Keyframe(0, 0), new Keyframe(1, 1));
-    private float journey = 1;
-
+    
+    //animation details
+    //journey of animation between 0 and 1
+    private float animationJourney = 1;
+    //starting position of animation
+    private Transform currentStartingPosition;
+    //ending position of animation
+    private CameraPositionDetails currentTargetPosition;
+    //store to prevent recreating variable each frame
+    private float updatedJourneyFromAnimationCurve;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -87,35 +95,50 @@ public class DynamicMenuManager : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!updateCameraPositionAfterAnimationCompleted && animationJourney == 1) return;
         
+        //increment time of lerp based on time
+        animationJourney += Time.deltaTime/currentTargetPosition.transitionTimeInSeconds;
+
+        //create new journey
+        updatedJourneyFromAnimationCurve = currentTargetPosition.lerpAnimationCurve.Evaluate(animationJourney);
+
+        //move camera to position
+        menuCamera.transform.position = Vector3.Lerp(currentStartingPosition.position, currentTargetPosition.targetPosition.transform.position, updatedJourneyFromAnimationCurve);
+        menuCamera.transform.rotation = Quaternion.Lerp(currentStartingPosition.rotation, currentTargetPosition.targetPosition.transform.rotation, updatedJourneyFromAnimationCurve);
     }
 
 
 
     public void ReturnCameraToMain()
     {
-
+        MoveCameraToPosition(defaultMainScreenIndex);
     }
 
 
 
     public void MoveCameraToPosition(int cameraPosition)
     {
+        if (cameraPosition >= cameraAnimationDetails.Length)
+        {
+            Debug.LogWarning("target camera index outside of array range");
+            return;
+        }
 
+        //reset journey to 0
+        animationJourney = 0;
+        currentStartingPosition = menuCamera.transform;
+        currentTargetPosition = cameraAnimationDetails[cameraPosition];
     }
-
-
-
-
-
-
-
 
 
     //animate to position using camera position details
     public void AnimateToPosition(CameraPositionDetails positionDetails)
     {
-
+        //reset journey to 0
+        animationJourney = 0;
+        currentStartingPosition = menuCamera.transform;
+        currentTargetPosition = positionDetails;
     }
 
 
