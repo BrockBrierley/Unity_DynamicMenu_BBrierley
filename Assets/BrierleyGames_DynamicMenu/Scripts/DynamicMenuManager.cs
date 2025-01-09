@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [Serializable]
-public struct CameraPositionDetails 
+public struct CameraPositionDetails
 {
     public enum soundType
     {
@@ -32,18 +32,27 @@ public struct CameraPositionDetails
     //animation curve used to add in animation effects
     public AnimationCurve lerpAnimationCurve;
 
+    //bool to allow seperate RotationCurve
+    public bool seperateRotationCurve;
+
+    //animation curve used to add in animation effects
+    [Header("use below animation curve if set above")]
+    public AnimationCurve lerpRotationCurve;
+
     //Select sound enum to create simple consistent audio
     [Header("Sounds")]
     public soundType selectSoundType;
 
     //or choose custom and add sounds below
-    [Header("Add sounds below for custom per animation")]
+    [Header("Add sounds below for custom per animation sound, if set above")]
     public AudioClip[] sounds;
 };
 
 
 public class DynamicMenuManager : MonoBehaviour
 {
+    public static DynamicMenuManager _instance;
+
     //create events that are called on begin and on finished of camera animation
     [HideInInspector]
     public UnityEvent<int> Event_CameraAnimationFinished;
@@ -99,6 +108,12 @@ public class DynamicMenuManager : MonoBehaviour
         //Safety checks to ensure the user doesn't accidentally cause errors without knowing why
         /////////
         //check if camera is assigned, if not assign main camera
+        if (DynamicMenuManager._instance != null && DynamicMenuManager._instance != this)
+        {
+            Destroy(gameObject);
+        }
+        _instance = this;
+
         if (menuCamera == null) menuCamera = Camera.main;
 
         //reset camera starting position if outside of array bounds

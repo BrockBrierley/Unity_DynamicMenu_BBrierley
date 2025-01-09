@@ -344,12 +344,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 628546095}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
+      propertyPath: cameraAnimationDetails.Array.data[0].selectSoundType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
+      propertyPath: cameraAnimationDetails.Array.data[0].seperateRotationCurve
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[0].transitionTimeInSeconds
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[1].transitionTimeInSeconds
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[0].lerpAnimationCurve.m_PreInfinity
@@ -400,40 +408,56 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
+      propertyPath: cameraAnimationDetails.Array.data[0].lerpAnimationCurve.m_Curve.Array.data[0].inSlope
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[0].lerpAnimationCurve.m_Curve.Array.data[1].inSlope
-      value: -1.3126146
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[1].lerpAnimationCurve.m_Curve.Array.data[0].inSlope
-      value: 2.4352198
+      value: -1.2557597
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[1].lerpAnimationCurve.m_Curve.Array.data[1].inSlope
-      value: 0.019216396
+      value: -1.1935438
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
+      propertyPath: cameraAnimationDetails.Array.data[0].lerpAnimationCurve.m_Curve.Array.data[0].outSlope
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[0].lerpAnimationCurve.m_Curve.Array.data[1].inWeight
-      value: 0.20134985
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[0].lerpAnimationCurve.m_Curve.Array.data[1].outSlope
-      value: -1.3126146
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[1].lerpAnimationCurve.m_Curve.Array.data[0].outSlope
-      value: 2.4352198
+      value: -1.2557597
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[1].lerpAnimationCurve.m_Curve.Array.data[1].inWeight
-      value: 0.25534308
+      value: 0.02980882
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[1].lerpAnimationCurve.m_Curve.Array.data[1].outSlope
-      value: 0.019216396
+      value: -1.1935438
       objectReference: {fileID: 0}
     - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
       propertyPath: cameraAnimationDetails.Array.data[1].lerpAnimationCurve.m_Curve.Array.data[0].outWeight
-      value: 0.049493816
+      value: 0.038790427
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
+      propertyPath: cameraAnimationDetails.Array.data[0].lerpAnimationCurve.m_Curve.Array.data[0].tangentMode
+      value: 34
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876953768613697211, guid: 37d440247e44f734ab114e2b1a2a6105, type: 3}
+      propertyPath: cameraAnimationDetails.Array.data[0].lerpAnimationCurve.m_Curve.Array.data[1].tangentMode
+      value: 34
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
