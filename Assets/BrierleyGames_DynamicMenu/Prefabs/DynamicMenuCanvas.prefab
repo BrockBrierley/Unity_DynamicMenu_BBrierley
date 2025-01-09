@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5743521623411985312}
   - component: {fileID: 2449892343777196071}
   - component: {fileID: 3433996591635721706}
+  - component: {fileID: 632448533840354072}
   m_Layer: 5
   m_Name: DynamicMenuCanvas
   m_TagString: Untagged
@@ -84,7 +85,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &2449892343777196071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,3 +115,24 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &632448533840354072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844680066737478845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3add468367828342ac1cd695b854646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animateDirection: 2
+  seperateAnimateOutDirection: 1
+  animateOutDirection: 0
+  animateFadeType: 0
+  seperateFadeOutDirection: 0
+  animateOutFadeType: 0
+  animateGrowType: 0
+  seperateGrowOutDirection: 0
+  animateOutGrowType: 0
