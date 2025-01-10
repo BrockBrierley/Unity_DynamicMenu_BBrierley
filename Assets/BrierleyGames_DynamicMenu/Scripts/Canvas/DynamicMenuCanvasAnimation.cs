@@ -4,6 +4,13 @@ using UnityEngine;
 public class DynamicMenuCanvasAnimation : MonoBehaviour
 {
     //Enums to make customising easier for the user
+    public enum AnimationStartPoint
+    {
+        CameraAnimationStart,
+        CameraAnimationMid,
+        CameraAnimationEnd
+    }
+
     public enum AnimationDirection
     {
         NoAnimation,
@@ -24,40 +31,104 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         Grow,
         Shrink
     }
+    [Header("References")]
+    [SerializeField] private DynamicMenuCameraTarget connectCameraTargetPosition;
+    [SerializeField] private float animationTimeInSeconds;
 
-    //Animation Direction variables
+    [Header("Set Up")]
+    [SerializeField] private AnimationStartPoint animStartPoint;
+
+
+    //Animation Direction variables (unclamped)
     [HideInInspector]
     [SerializeField] private AnimationDirection animateDirection;
     [HideInInspector]
     [SerializeField] private bool seperateAnimateOutDirection;
     [HideInInspector]
     [SerializeField] private AnimationDirection animateOutDirection;
+    [HideInInspector]
+    [SerializeField] private AnimationCurve directionCurve;
 
-    //Fade Type variables
+    //Fade Type variables (clamp bewteen 0 and 1)
     [HideInInspector]
     [SerializeField] private FadeType animateFadeType;
     [HideInInspector]
     [SerializeField] private bool seperateFadeOutDirection;
     [HideInInspector]
     [SerializeField] private FadeType animateOutFadeType;
+    [HideInInspector]
+    [SerializeField] private AnimationCurve fadeCurve;
 
-    //Grow type variables
+    //Grow type variables (clamp to 0+)
     [HideInInspector]
     [SerializeField] private GrowType animateGrowType;
     [HideInInspector]
     [SerializeField] private bool seperateGrowOutDirection;
     [HideInInspector]
     [SerializeField] private GrowType animateOutGrowType;
+    [HideInInspector]
+    [SerializeField] private AnimationCurve growCurve;
+
+    //private variables
+    public float animationJourney = 1;
+
+    private Vector3 targetPosition;
+    private float targetFade;
+    private Vector3 targetScale;
+
+
+    private void Start()
+    {
+        //Set animation start points
+        switch(animStartPoint)
+        {
+            //set animation start point in the middle of camera animation
+            case AnimationStartPoint.CameraAnimationMid:
+                connectCameraTargetPosition.Event_AnimationMid.AddListener(AnimateIn);
+                break;
+            //set animation start point at the end of camera animation
+            case AnimationStartPoint.CameraAnimationEnd:
+                connectCameraTargetPosition.Event_AnimationEnd.AddListener(AnimateIn);
+                break;
+            //Set animation start point at the start of the camera animation
+            case AnimationStartPoint.CameraAnimationStart:
+            default:
+                connectCameraTargetPosition.Event_AnimationStart.AddListener(AnimateIn);
+                break;
+        }
+
+        connectCameraTargetPosition.Event_HideCanvasPanel.AddListener(AnimateOut);
+    }
+
+    private void Update()
+    {
+        if (animationJourney >= 1) return;
+    }
+
+    private void OnDestroy()
+    {
+        //remove listeners on destroy
+        connectCameraTargetPosition.Event_AnimationStart.RemoveListener(AnimateIn);
+        connectCameraTargetPosition.Event_AnimationMid.RemoveListener(AnimateIn);
+        connectCameraTargetPosition.Event_AnimationEnd.RemoveListener(AnimateIn);
+        connectCameraTargetPosition.Event_HideCanvasPanel.RemoveListener(AnimateOut);
+    }
 
 
     public void AnimateIn()
     {
-
+        
+        BeginAnimation();
     }
 
     public void AnimateOut()
     {
+        BeginAnimation();
+    }
 
+    private void BeginAnimation()
+    {
+        animationJourney = 0;
     }
 
     //Show and Hide editor variables depending on what is selected

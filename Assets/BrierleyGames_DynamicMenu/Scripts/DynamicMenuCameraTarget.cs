@@ -36,6 +36,17 @@ public class DynamicMenuCameraTarget : MonoBehaviour
     //animation curve used to add in animation effects
     public AnimationCurve lerpRotationCurve;
     //////////
+    ///
+
+
+    [HideInInspector]
+    public UnityEvent Event_AnimationStart;
+    [HideInInspector]
+    public UnityEvent Event_AnimationMid;
+    [HideInInspector]
+    public UnityEvent Event_AnimationEnd;
+    [HideInInspector]
+    public UnityEvent Event_HideCanvasPanel;
 
     /// <summary>
     /// Call on start, subscribe to all animation events
@@ -70,9 +81,16 @@ public class DynamicMenuCameraTarget : MonoBehaviour
     /// Called when the camera movement animation starts
     /// </summary>
     /// <param name="completedTarget">target camera position</param>
-    public void AnimationStartedEventReader(DynamicMenuCameraTarget completedTarget)
+    public void AnimationStartedEventReader(DynamicMenuCameraTarget animationTarget)
     {
-        if (completedTarget != this) return;
+        if (animationTarget != this)
+        {
+            //close listening canvas panel(s)
+            Event_HideCanvasPanel.Invoke();
+            return;
+        }
+        //call animation start
+        Event_AnimationStart.Invoke();
     }
 
     /// <summary>
@@ -82,6 +100,9 @@ public class DynamicMenuCameraTarget : MonoBehaviour
     public void AnimationMiddleEventReader(DynamicMenuCameraTarget completedTarget)
     {
         if (completedTarget != this) return;
+
+        //call animation mid
+        Event_AnimationMid.Invoke();
     }
 
     /// <summary>
@@ -91,13 +112,26 @@ public class DynamicMenuCameraTarget : MonoBehaviour
     public void AnimationFinishedEventReader(DynamicMenuCameraTarget completedTarget)
     {
         if (completedTarget != this) return;
+
+        //call animation end
+        Event_AnimationEnd.Invoke();
     }
 
+    /// <summary>
+    /// returns the updated journey percentage based on the curve set
+    /// </summary>
+    /// <param name="currentJourney"></param>
+    /// <returns></returns>
     public float GetUpdatedJourneyFromCurve(float currentJourney)
     {
         return lerpAnimationCurve.Evaluate(currentJourney);
     }
 
+    /// <summary>
+    /// returns the updated journey percentage based on the curve set
+    /// </summary>
+    /// <param name="currentJourney"></param>
+    /// <returns></returns>
     public float GetUpdatedRotationJourneyFromCurve(float currentJourney)
     {
         if (seperateRotationCurve) return lerpRotationCurve.Evaluate(currentJourney);
