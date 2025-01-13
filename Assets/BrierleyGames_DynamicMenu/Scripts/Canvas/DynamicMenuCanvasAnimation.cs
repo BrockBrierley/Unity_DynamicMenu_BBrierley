@@ -17,7 +17,9 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         Left,
         Up,
         Right,
-        Down
+        Down,
+        Forward,
+        Backward
     }
     public enum FadeType
     {
@@ -33,10 +35,12 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     }
     [Header("References")]
     [SerializeField] private DynamicMenuCameraTarget connectCameraTargetPosition;
+    [SerializeField] private CanvasGroup canvasObject;
     [SerializeField] private float animationTimeInSeconds;
 
     [Header("Set Up")]
     [SerializeField] private AnimationStartPoint animStartPoint;
+    [SerializeField] private bool startInactive;
 
 
     //Animation Direction variables (unclamped)
@@ -53,7 +57,7 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     [HideInInspector]
     [SerializeField] private FadeType animateFadeType;
     [HideInInspector]
-    [SerializeField] private bool seperateFadeOutDirection;
+    [SerializeField] private bool seperateFadeOutType;
     [HideInInspector]
     [SerializeField] private FadeType animateOutFadeType;
     [HideInInspector]
@@ -63,7 +67,7 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     [HideInInspector]
     [SerializeField] private GrowType animateGrowType;
     [HideInInspector]
-    [SerializeField] private bool seperateGrowOutDirection;
+    [SerializeField] private bool seperateGrowOutType;
     [HideInInspector]
     [SerializeField] private GrowType animateOutGrowType;
     [HideInInspector]
@@ -72,13 +76,40 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     //private variables
     public float animationJourney = 1;
 
+    //origin starting variables
+    private Vector3 originPosition;
+    private Vector3 originScale;
+
+
+    //target position
     private Vector3 targetPosition;
     private float targetFade;
     private Vector3 targetScale;
 
+    //animationStartingPosition;
+    private Vector3 animStartingPosition;
+    private float animStartingFade;
+    private Vector3 animStartingScale;
+
+    //bool to determine the direction of animating canvas
+    private bool animatingIntoPosition = false;
+
+    //variables to be applied to animation
+    private float positionOffset = 10;
+    private float scaleOffset = 10;
+
+    //
+    private float minFade = 0;
+    private float maxFade = 1;
 
     private void Start()
     {
+        if (canvasObject == null)
+        {
+            canvasObject = GetComponent<CanvasGroup>();
+        }
+
+
         //Set animation start points
         switch(animStartPoint)
         {
@@ -98,6 +129,18 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         }
 
         connectCameraTargetPosition.Event_HideCanvasPanel.AddListener(AnimateOut);
+
+        originPosition = transform.localPosition;
+        originScale = transform.localScale;
+
+        //set up starting position, scale and fade
+        //do last in start to not override any variables
+        if(startInactive)
+        {
+            transform.localPosition = GetInactivePosition();
+            transform.localScale = GetInactiveScale();
+            canvasObject.alpha = GetInactiveFade();
+        }
     }
 
     private void Update()
@@ -108,23 +151,156 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     private void OnDestroy()
     {
         //remove listeners on destroy
-        connectCameraTargetPosition.Event_AnimationStart.RemoveListener(AnimateIn);
-        connectCameraTargetPosition.Event_AnimationMid.RemoveListener(AnimateIn);
-        connectCameraTargetPosition.Event_AnimationEnd.RemoveListener(AnimateIn);
-        connectCameraTargetPosition.Event_HideCanvasPanel.RemoveListener(AnimateOut);
+        connectCameraTargetPosition?.Event_AnimationStart.RemoveListener(AnimateIn);
+        connectCameraTargetPosition?.Event_AnimationMid.RemoveListener(AnimateIn);
+        connectCameraTargetPosition?.Event_AnimationEnd.RemoveListener(AnimateIn);
+        connectCameraTargetPosition?.Event_HideCanvasPanel.RemoveListener(AnimateOut);
     }
 
 
     public void AnimateIn()
     {
-        
+        //set start and end position
+        animStartingPosition = GetInactivePosition();
+        targetPosition = GetActivePosition();
+
+        //set start and end fade
+        animStartingFade  = GetInactiveFade();
+        targetFade = GetActiveFade();
+
+        //set start and end scale
+        animStartingScale = GetInactiveScale();
+        targetScale = GetActiveScale();
+
+        animatingIntoPosition = true;
+
         BeginAnimation();
     }
 
     public void AnimateOut()
     {
+        targetPosition = GetInactivePosition();
+        animStartingPosition = GetActivePosition();
+
+        animatingIntoPosition = false;
+
         BeginAnimation();
     }
+
+    //Get animate in and out values
+
+    private Vector3 GetActivePosition()
+    {
+        return originPosition;
+    }
+
+    private Vector3 GetInactivePosition()
+    {
+        //get if animation is seperate or not
+        AnimationDirection direction;
+        if (seperateAnimateOutDirection)
+        {
+            direction = animateOutDirection;
+        }
+        else
+        {
+            direction = animateDirection;
+        }
+
+        switch (direction)
+        {
+            //up down
+            case AnimationDirection.Up:
+                return originPosition + transform.up * positionOffset;
+            case AnimationDirection.Down:
+                return originPosition - transform.up * positionOffset;
+            
+            //Left Right
+            case AnimationDirection.Right:
+                return originPosition + transform.right * positionOffset;
+            case AnimationDirection.Left:
+                return originPosition - transform.right * positionOffset;
+
+            //Forward Backward
+            case AnimationDirection.Forward:
+                return originPosition + transform.forward * positionOffset;
+            case AnimationDirection.Backward:
+                return originPosition - transform.forward * positionOffset;
+
+            //no animation
+            case AnimationDirection.NoAnimation:
+            default:
+                break;
+        }
+
+        return originPosition;
+    }
+
+    //Get fade in and out values
+
+    private float GetActiveFade()
+    {
+        return maxFade;
+    }
+
+    private float GetInactiveFade()
+    { 
+        FadeType fadeType;
+        if (seperateFadeOutType)
+        {
+            fadeType = animateOutFadeType;
+        }
+        else
+        {
+            fadeType = animateFadeType;
+        }
+
+        //get fade out alpha value
+        switch(fadeType)
+        {
+            case FadeType.NoFade:
+                return maxFade;
+            case FadeType.Instant:
+            case FadeType.Fade:
+            default:
+                break;
+        }
+        return minFade;
+    }
+
+   
+    //get scale in and out values
+    private Vector3 GetActiveScale()
+    {
+        return originScale;
+    }
+
+    private Vector3 GetInactiveScale()
+    {
+        GrowType growType;
+        if(seperateGrowOutType)
+        {
+            growType = animateOutGrowType;
+        }
+        else
+        {
+            growType = animateGrowType;
+        }
+
+        switch (growType)
+        {
+            case GrowType.Grow:
+                return originScale + new Vector3(scaleOffset, scaleOffset, scaleOffset);
+            case GrowType.Shrink:
+                return Vector3.zero;
+            case GrowType.ConstantSize:
+            default:
+                break;
+        }
+
+        return originScale;
+    }
+
 
     private void BeginAnimation()
     {
@@ -166,9 +342,9 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
             if (showFadeSettings)
             {
                 dynamicMenuCanvasAnimationEditor.animateFadeType = (FadeType)EditorGUILayout.EnumPopup("Seperate Animate Out Direction", dynamicMenuCanvasAnimationEditor.animateFadeType);
-                dynamicMenuCanvasAnimationEditor.seperateFadeOutDirection = EditorGUILayout.Toggle("Seperate Animate Out Direction", dynamicMenuCanvasAnimationEditor.seperateFadeOutDirection);
+                dynamicMenuCanvasAnimationEditor.seperateFadeOutType = EditorGUILayout.Toggle("Seperate Animate Out Direction", dynamicMenuCanvasAnimationEditor.seperateFadeOutType);
                 //only show if above variable is selected
-                if (dynamicMenuCanvasAnimationEditor.seperateFadeOutDirection)
+                if (dynamicMenuCanvasAnimationEditor.seperateFadeOutType)
                 {
                     dynamicMenuCanvasAnimationEditor.animateOutFadeType = (FadeType)EditorGUILayout.EnumPopup("Animate Out Direction", dynamicMenuCanvasAnimationEditor.animateOutFadeType);
                 }
@@ -181,9 +357,9 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
             if (showGrowSettings)
             {
                 dynamicMenuCanvasAnimationEditor.animateGrowType = (GrowType)EditorGUILayout.EnumPopup("Seperate Animate Out Direction", dynamicMenuCanvasAnimationEditor.animateGrowType);
-                dynamicMenuCanvasAnimationEditor.seperateGrowOutDirection = EditorGUILayout.Toggle("Seperate Animate Out Direction", dynamicMenuCanvasAnimationEditor.seperateGrowOutDirection);
+                dynamicMenuCanvasAnimationEditor.seperateGrowOutType = EditorGUILayout.Toggle("Seperate Animate Out Direction", dynamicMenuCanvasAnimationEditor.seperateGrowOutType);
                 //only show if above variable is selected
-                if (dynamicMenuCanvasAnimationEditor.seperateGrowOutDirection)
+                if (dynamicMenuCanvasAnimationEditor.seperateGrowOutType)
                 {
                     dynamicMenuCanvasAnimationEditor.animateOutGrowType = (GrowType)EditorGUILayout.EnumPopup("Animate Out Direction", dynamicMenuCanvasAnimationEditor.animateOutGrowType);
                 }
