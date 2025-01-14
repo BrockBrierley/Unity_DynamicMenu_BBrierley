@@ -125,13 +125,13 @@ public class DynamicMenuManager : MonoBehaviour
     /// <param name="positionDetails"></param>
     public void AnimateToPosition(DynamicMenuCameraTarget positionDetails)
     {
+        currentTargetPosition = positionDetails;
         //set up event data
         Event_CameraAnimationStarted.Invoke(currentTargetPosition);
 
         //reset journey to 0
         animationJourney = 0;
         SetStartingTransform(menuCamera.transform);
-        currentTargetPosition = positionDetails;
         animationCompleted = false;
         midAnimationEventCompleted = false;
     }
