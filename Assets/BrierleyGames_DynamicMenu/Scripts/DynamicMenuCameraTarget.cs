@@ -4,11 +4,11 @@ using UnityEngine.Events;
 
 public class DynamicMenuCameraTarget : MonoBehaviour
 {
-    public enum soundType
+    public enum SoundType
     {
-        Open,
-        Close,
-        Other,
+        MoveTo,
+        MoveBack,
+        Silent,
         Custom
     }
     //number of second to move to this set position
@@ -18,27 +18,23 @@ public class DynamicMenuCameraTarget : MonoBehaviour
     public float MiddleAnimationEventTime = 0.5f;
 
     //Select sound enum to create simple consistent audio
-    [Header("Sounds")]
-    public soundType selectSoundType;
+    [HideInInspector]
+    [SerializeField] private SoundType selectSoundType;
+    [HideInInspector]
+    [SerializeField] private AudioClip[] customSounds;
 
-    //or choose custom and add sounds below
-    [Header("Add sounds if set as custom above")]
-    public AudioClip[] sounds;
-
-    ////Hide below as it is shown with custom GUI later
+    ////Animation Selections
     [HideInInspector]
     //animation curve used to add in animation effects
-    public AnimationCurve lerpAnimationCurve;
+    [SerializeField] private AnimationCurve lerpAnimationCurve;
     [HideInInspector]
     //bool to allow seperate RotationCurve
-    public bool seperateRotationCurve;
+    [SerializeField] private bool seperateRotationCurve;
     [HideInInspector]
     //animation curve used to add in animation effects
-    public AnimationCurve lerpRotationCurve;
-    //////////
-    ///
+    [SerializeField] private AnimationCurve lerpRotationCurve;
 
-
+    //Events
     [HideInInspector]
     public UnityEvent Event_AnimationStart;
     [HideInInspector]
@@ -143,35 +139,53 @@ public class DynamicMenuCameraTarget : MonoBehaviour
     [CustomEditor(typeof(DynamicMenuCameraTarget))]
     public class CameraTagetEditor : Editor
     {
-        bool showAnimationSettings = true;
+        bool showAnimationSettings = false;
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
+            
+            DynamicMenuCameraTarget cameraTargetEditor = (DynamicMenuCameraTarget)target;
+            serializedObject.Update();
+
+            serializedObject.FindProperty("selectSoundType").enumValueIndex = (int)(SoundType)EditorGUILayout.EnumPopup("Select Sound Mode", cameraTargetEditor.selectSoundType);
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
+
+            if (cameraTargetEditor.selectSoundType == SoundType.Custom)
+            {
+
+                SerializedProperty soundsProperty = serializedObject.FindProperty("customSounds");
+
+                EditorGUILayout.PropertyField(soundsProperty, true);
+            }
+
+
+
+
+
 
             showAnimationSettings = EditorGUILayout.BeginFoldoutHeaderGroup(showAnimationSettings, "Animation Curve");
 
             if (showAnimationSettings)
             {
-                //set this class as editor script
-                DynamicMenuCameraTarget cameraTargetEditor = target as DynamicMenuCameraTarget;
+
+                SerializedProperty lerpAnimationCurve = serializedObject.FindProperty("lerpAnimationCurve");
+                EditorGUILayout.PropertyField (lerpAnimationCurve, true);
+
+
+                SerializedProperty seperateRotationCurve = serializedObject.FindProperty("seperateRotationCurve");
+                EditorGUILayout.PropertyField(seperateRotationCurve, true);
 
                 if (cameraTargetEditor.seperateRotationCurve)
                 {
-                    cameraTargetEditor.lerpAnimationCurve = EditorGUILayout.CurveField("Lerp Movement Animation", cameraTargetEditor.lerpAnimationCurve);
-                }
-                else
-                {
-                    cameraTargetEditor.lerpAnimationCurve = EditorGUILayout.CurveField("Lerp Animation", cameraTargetEditor.lerpAnimationCurve);
-                }
-
-                cameraTargetEditor.seperateRotationCurve = EditorGUILayout.Toggle("Seperate Rotation Curve?", cameraTargetEditor.seperateRotationCurve);
-
-                if (cameraTargetEditor.seperateRotationCurve)
-                {
-                    cameraTargetEditor.lerpRotationCurve = EditorGUILayout.CurveField("Lerp Rotation Animation", cameraTargetEditor.lerpRotationCurve);
+                    SerializedProperty lerpRotationCurve = serializedObject.FindProperty("lerpRotationCurve");
+                    EditorGUILayout.PropertyField(lerpRotationCurve, true);
                 }
             }
             EditorGUILayout.EndFoldoutHeaderGroup();
+
+
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }
