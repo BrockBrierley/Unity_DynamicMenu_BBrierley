@@ -3,7 +3,7 @@ using UnityEngine;
 public class DynamicMenuAudioManager : MonoBehaviour
 {
     //this object accessible from anywhere
-    public static DynamicMenuAudioManager _instnace;
+    public static DynamicMenuAudioManager _instance;
 
     //audio source to play sound
     [Header("References")]
@@ -19,7 +19,7 @@ public class DynamicMenuAudioManager : MonoBehaviour
     void Start()
     {
         //ensure there isnt any doubling up of this static object instance
-        if (DynamicMenuAudioManager._instnace != null && DynamicMenuAudioManager._instnace != this)
+        if (DynamicMenuAudioManager._instance != null && DynamicMenuAudioManager._instance != this)
         {
             Destroy(gameObject);
         }

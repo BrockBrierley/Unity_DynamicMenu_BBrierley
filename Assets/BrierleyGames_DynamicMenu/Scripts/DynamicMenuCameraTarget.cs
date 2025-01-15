@@ -70,7 +70,33 @@ public class DynamicMenuCameraTarget : MonoBehaviour
     /// </summary>
     public void AnimateCameraToThisPoint()
     {
+        //verify manager is in the scene before attempting to access
+        if (DynamicMenuManager._instance == null) return;
+
         DynamicMenuManager._instance.AnimateToPosition(this);
+
+        //verify audio manager is in the scene before attempting to access
+        if (DynamicMenuAudioManager._instance == null) return;
+
+        switch(selectSoundType)
+        {
+            //play move to sound
+            case SoundType.MoveTo:
+                DynamicMenuAudioManager._instance.PlayMoveToAudio();
+                break;
+            //play move back sound
+            case SoundType.MoveBack:
+                DynamicMenuAudioManager._instance.PlayMoveBackAudio();
+                break;
+            //play custom sound
+            case SoundType.Custom:
+                DynamicMenuAudioManager._instance.PlayAudio(customSounds);
+                break;
+            //do not play a sound
+            case SoundType.Silent:
+            default:
+                break;
+        }
     }
 
     /// <summary>

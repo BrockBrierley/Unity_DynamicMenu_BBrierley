@@ -180,49 +180,43 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         canvasObject.alpha = Mathf.Clamp(animStartingFade + (targetFade - animStartingFade) * alphaCurve.Evaluate(animationJourney), minFade, maxFade);
     }
 
+    /// <summary>
+    /// Begins this canvas' animation
+    /// </summary>
     private void BeginAnimation()
     {
         SetUpCurves();
         animationJourney = 0;
     }
 
+    /// <summary>
+    /// sets up the animation curves based on the users selections
+    /// </summary>
     private void SetUpCurves()
     {
+        //set curves
+        movementCurve = directionCurve;
+        alphaCurve = fadeCurve;
+        sizeCurve = growCurve;
+
+
+        //do not override above if moving into position
+        if (!animatingIntoPosition) return;
+
         //Movement Curve
-        if (!animatingIntoPosition)
+        if (seperateAnimateOutDirectionCurve)
         {
-            if (seperateAnimateOutDirectionCurve)
-            {
-                movementCurve = directionOutCurve;
-            }
-            else
-            {
-                movementCurve = directionCurve;
-            }
-            //Fade Curve
-            if (seperateFadeCurve)
-            {
-                alphaCurve = fadeOutCurve;
-            }
-            else
-            {
-                alphaCurve = fadeCurve;
-            }
-            //Scale Curve
-            if (seperateGrowCurve)
-            {
-                sizeCurve = growOutCurve;
-            }
-            else
-            {
-                sizeCurve = growCurve;
-            }
+            movementCurve = directionOutCurve;
         }
-        else
+        //Fade Curve
+        if (seperateFadeCurve)
         {
-            movementCurve = directionCurve;
-            alphaCurve = fadeCurve;
-            sizeCurve = growCurve;
+            alphaCurve = fadeOutCurve;
+        }
+        //Scale Curve
+        if (seperateGrowCurve)
+        {
+            sizeCurve = growOutCurve;
         }
     }
 
@@ -235,10 +229,11 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         connectedCameraTargetPosition?.Event_HideCanvasPanel.RemoveListener(AnimateOut);
     }
 
-
+    /// <summary>
+    /// Prepare this object for animating into position before calling to start animation
+    /// </summary>
     public void AnimateIn()
     {
-
         animatingIntoPosition = true;
 
         //set start and end position
@@ -256,6 +251,9 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         BeginAnimation();
     }
 
+    /// <summary>
+    /// Prepare this object for animating out of position, before it calls to start animation
+    /// </summary>
     public void AnimateOut()
     {
 
@@ -278,11 +276,19 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
     //Get animate in and out values
 
+    /// <summary>
+    /// returns the starting/active position of this object
+    /// </summary>
+    /// <returns>vector 3 of active position</returns>
     private Vector3 GetActivePosition()
     {
         return originPosition;
     }
 
+    /// <summary>
+    /// Calculates and returns inactive position for this object to move away or towards from when animating in and out (respectively)
+    /// </summary>
+    /// <returns>vector 3 of target or starting position</returns>
     private Vector3 GetInactivePosition()
     {
         //get if animation is seperate or not
@@ -327,11 +333,19 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
     //Get fade in and out values
 
+    /// <summary>
+    /// Returns active alpha value of canvas
+    /// </summary>
+    /// <returns>returns float of 1</returns>
     private float GetActiveFade()
     {
         return maxFade;
     }
 
+    /// <summary>
+    /// returns inactive alpha value of canvas
+    /// </summary>
+    /// <returns>returns float between 0 and 1</returns>
     private float GetInactiveFade()
     { 
         FadeType fadeType;
@@ -359,11 +373,19 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
    
     //get scale in and out values
+    /// <summary>
+    /// returns active scale of object
+    /// </summary>
+    /// <returns>vector 3 scale of object when active</returns>
     private Vector3 GetActiveScale()
     {
         return originScale;
     }
 
+    /// <summary>
+    /// returns scale of object when inactive, either larger or smaller depending on player selection
+    /// </summary>
+    /// <returns>vector 3 of scale</returns>
     private Vector3 GetInactiveScale()
     {
         GrowType growType;
