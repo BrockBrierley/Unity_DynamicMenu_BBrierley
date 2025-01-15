@@ -71,13 +71,23 @@ public class DynamicMenuCameraTarget : MonoBehaviour
     public void AnimateCameraToThisPoint()
     {
         //verify manager is in the scene before attempting to access
-        if (DynamicMenuManager._instance == null) return;
-
+        if (DynamicMenuManager._instance == null)
+        {
+            Debug.LogError("No DynamicMenuManager in the scene, DynamicMenu objects will fail to work properly until it has been added");
+            return;
+        }
         DynamicMenuManager._instance.AnimateToPosition(this);
 
-        //verify audio manager is in the scene before attempting to access
-        if (DynamicMenuAudioManager._instance == null) return;
 
+        //no audio necessary
+        if (selectSoundType == SoundType.Silent) return;
+
+        //verify audio manager is in the scene before attempting to access
+        if (DynamicMenuAudioManager._instance == null)
+        {
+            Debug.LogWarning("No DynamicMenuAudioManager in scene, please add it or change sound type to silent to remove this warning");
+            return;
+        }
         switch(selectSoundType)
         {
             //play move to sound

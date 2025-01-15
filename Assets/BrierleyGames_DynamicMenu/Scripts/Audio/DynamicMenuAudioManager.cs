@@ -43,8 +43,11 @@ public class DynamicMenuAudioManager : MonoBehaviour
         AudioClip clipToPlay = GetRandomClipFromArray(moveToAudio);
 
         //return if audio is null
-        if (clipToPlay == null) return;
-
+        if (clipToPlay == null)
+        {
+            Debug.LogWarning("No Audio file was found for selected sound type, please ensure you have added sounds to the respective audio clip slots, or set the DynamicMenuCameraTarget's sound type to Silent");
+            return;
+        }
         //Set Audio
         audioSource.clip = clipToPlay;
 
