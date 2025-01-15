@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Rendering;
@@ -17,9 +18,9 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     {
         NoAnimation,
         Left,
-        Up,
+        Above,
         Right,
-        Down,
+        Below,
         Forward,
         Backward
     }
@@ -32,8 +33,8 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     public enum GrowType
     {
         ConstantSize,
-        Grow,
-        Shrink
+        Larger,
+        Smaller
     }
     [Header("References")]
     [SerializeField] private DynamicMenuCameraTarget connectedCameraTargetPosition;
@@ -125,6 +126,8 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     private AnimationCurve alphaCurve;
     private AnimationCurve sizeCurve;
 
+    private bool isActive = true;
+
     private void Start()
     {
         if (canvasObject == null)
@@ -160,6 +163,7 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         //do last in start to not override any variables
         if(startInactive)
         {
+            isActive = false;
             transform.localPosition = GetInactivePosition();
             transform.localScale = GetInactiveScale();
             canvasObject.alpha = GetInactiveFade();
@@ -170,6 +174,16 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     {
         if (animationJourney >= 1) return;
         animationJourney += Time.deltaTime/animationTimeInSeconds;
+
+        //if (DynamicMenuManager._instance != null )
+        //{
+        //    if (DynamicMenuManager._instance.updateCameraPositionAfterAnimationCompleted)
+        //    {
+        //        if (animatingIntoPosition) animStartingPosition = GetInactivePosition();
+        //        else animStartingPosition = GetActivePosition();
+        //    }
+        //}
+
 
         //Lerp this canvas
         //unclamped
@@ -248,6 +262,8 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         animStartingScale = GetInactiveScale();
         targetScale = GetActiveScale();
 
+        isActive = true;
+
         BeginAnimation();
     }
 
@@ -256,7 +272,7 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
     /// </summary>
     public void AnimateOut()
     {
-
+        if (!isActive) return;
         animatingIntoPosition = false;
 
         //set start and end position
@@ -270,6 +286,8 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         //set start and end scale
         animStartingScale = GetActiveScale();
         targetScale = GetInactiveScale();
+
+        isActive = false;
 
         BeginAnimation();
     }
@@ -305,22 +323,22 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         switch (direction)
         {
             //up down
-            case AnimationDirection.Up:
-                return originPosition + transform.up * positionOffset;
-            case AnimationDirection.Down:
-                return originPosition - transform.up * positionOffset;
+            case AnimationDirection.Above:
+                return originPosition + Vector3.up * positionOffset;
+            case AnimationDirection.Below:
+                return originPosition - Vector3.up * positionOffset;
             
             //Left Right
             case AnimationDirection.Right:
-                return originPosition + transform.right * positionOffset;
+                return originPosition + Vector3.right * positionOffset;
             case AnimationDirection.Left:
-                return originPosition - transform.right * positionOffset;
+                return originPosition - Vector3.right * positionOffset;
 
             //Forward Backward
             case AnimationDirection.Forward:
-                return originPosition + transform.forward * positionOffset;
+                return originPosition + Vector3.forward * positionOffset;
             case AnimationDirection.Backward:
-                return originPosition - transform.forward * positionOffset;
+                return originPosition - Vector3.forward * positionOffset;
 
             //no animation
             case AnimationDirection.NoAnimation:
@@ -400,9 +418,9 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
         switch (growType)
         {
-            case GrowType.Grow:
+            case GrowType.Larger:
                 return originScale * scaleOffset;
-            case GrowType.Shrink:
+            case GrowType.Smaller:
                 return Vector3.zero;
             case GrowType.ConstantSize:
             default:
@@ -435,13 +453,21 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
             if (showAnimationSettings)
             {
-                //directionStyle
-                serializedObject.FindProperty("animateDirection").enumValueIndex = (int)(AnimationDirection)EditorGUILayout.EnumPopup("Animation Direction", dynamicMenuCanvasAnimationEditor.animateDirection);
+                if (dynamicMenuCanvasAnimationEditor.seperateAnimateOutDirection)
+                {
+                    //directionStyle
+                    serializedObject.FindProperty("animateDirection").enumValueIndex = (int)(AnimationDirection)EditorGUILayout.EnumPopup("Animation From Direction", dynamicMenuCanvasAnimationEditor.animateDirection);
+                }
+                else
+                {
+                    serializedObject.FindProperty("animateDirection").enumValueIndex = (int)(AnimationDirection)EditorGUILayout.EnumPopup("Animation From/To Direction", dynamicMenuCanvasAnimationEditor.animateDirection);
+
+                }
                 serializedObject.FindProperty("seperateAnimateOutDirection").boolValue = EditorGUILayout.Toggle("Seperate Animate Out Direction?", dynamicMenuCanvasAnimationEditor.seperateAnimateOutDirection);
                 //only show if above variable is selected
                 if (dynamicMenuCanvasAnimationEditor.seperateAnimateOutDirection)
                 {
-                    serializedObject.FindProperty("animateOutDirection").enumValueIndex = (int)(AnimationDirection)EditorGUILayout.EnumPopup("Animate Out Direction", dynamicMenuCanvasAnimationEditor.animateOutDirection);
+                    serializedObject.FindProperty("animateOutDirection").enumValueIndex = (int)(AnimationDirection)EditorGUILayout.EnumPopup("Animate out To Direction", dynamicMenuCanvasAnimationEditor.animateOutDirection);
                 }
 
                 //curve settings
@@ -488,12 +514,20 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
             if (showGrowSettings)
             {
-                serializedObject.FindProperty("animateGrowType").enumValueIndex = (int)(GrowType)EditorGUILayout.EnumPopup("Grow Type", dynamicMenuCanvasAnimationEditor.animateGrowType);
+                if (dynamicMenuCanvasAnimationEditor.seperateGrowOutType)
+                {
+                    serializedObject.FindProperty("animateGrowType").enumValueIndex = (int)(GrowType)EditorGUILayout.EnumPopup("Animate Size From", dynamicMenuCanvasAnimationEditor.animateGrowType);
+
+                }
+                else
+                {
+                    serializedObject.FindProperty("animateGrowType").enumValueIndex = (int)(GrowType)EditorGUILayout.EnumPopup("Animate Size From/To", dynamicMenuCanvasAnimationEditor.animateGrowType);
+                }
                 serializedObject.FindProperty("seperateGrowOutType").boolValue = EditorGUILayout.Toggle("Seperate Grow Out Type?", dynamicMenuCanvasAnimationEditor.seperateGrowOutType);
                 //only show if above variable is selected
                 if (dynamicMenuCanvasAnimationEditor.seperateGrowOutType)
                 {
-                    serializedObject.FindProperty("animateOutGrowType").enumValueIndex = (int)(GrowType)EditorGUILayout.EnumPopup("Grow Out Direction", dynamicMenuCanvasAnimationEditor.animateOutGrowType);
+                    serializedObject.FindProperty("animateOutGrowType").enumValueIndex = (int)(GrowType)EditorGUILayout.EnumPopup("Animate Size To", dynamicMenuCanvasAnimationEditor.animateOutGrowType);
                 }
 
                 //curve settings

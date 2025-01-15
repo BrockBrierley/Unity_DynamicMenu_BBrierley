@@ -31,7 +31,7 @@ public class DynamicMenuManager : MonoBehaviour
     [Header("Values")]
     //set bool on or off to allow updating camera position every frame regardless of journey status in animation
     //set to true will allow camera to follow object, set to false when only static and save some resources
-    [SerializeField] private bool updateCameraPositionAfterAnimationCompleted = true;
+    [SerializeField] public bool updateCameraPositionAfterAnimationCompleted = true;
 
     //Private variables
     //animation details
@@ -116,7 +116,7 @@ public class DynamicMenuManager : MonoBehaviour
     /// </summary>
     public void ReturnCameraToMain()
     {
-        AnimateToPosition(defaultMainScreenPosition);
+        defaultMainScreenPosition.AnimateCameraToThisPoint();
     }
 
     /// <summary>

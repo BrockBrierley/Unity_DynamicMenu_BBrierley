@@ -24,6 +24,8 @@ public class DynamicMenuAudioManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        _instance = this;
+
         //Check to make sure audio source is valid
         if (audioSource == null)
         {
