@@ -1807,6 +1807,10 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 5743521623411985312, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8924979189694474752, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

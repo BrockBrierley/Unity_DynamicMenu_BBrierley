@@ -135,6 +135,12 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
             canvasObject = GetComponent<CanvasGroup>();
         }
 
+        if (canvasObject == null)
+        {
+            Debug.LogError("Canvas missing 'Canvas Group' component, please add it to canvas " + this.name);
+            Destroy(gameObject);
+        }
+
 
         //Set animation start points
         switch(animStartPoint)
