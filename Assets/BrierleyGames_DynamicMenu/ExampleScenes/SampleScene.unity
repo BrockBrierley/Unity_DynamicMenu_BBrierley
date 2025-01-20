@@ -671,8 +671,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: seperateRotationCurve
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
       propertyPath: transitionTimeInSeconds
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: MiddleAnimationEventTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: lerpRotationCurve.m_Curve.Array.data[1].inSlope
+      value: -4.127697
       objectReference: {fileID: 0}
     - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
       propertyPath: lerpAnimationCurve.m_Curve.Array.data[0].inSlope
@@ -683,11 +695,27 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: lerpRotationCurve.m_Curve.Array.data[1].inWeight
+      value: 0.02063483
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: lerpRotationCurve.m_Curve.Array.data[1].outSlope
+      value: -4.127697
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
       propertyPath: lerpAnimationCurve.m_Curve.Array.data[0].outSlope
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
       propertyPath: lerpAnimationCurve.m_Curve.Array.data[1].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: lerpRotationCurve.m_Curve.Array.data[0].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: lerpRotationCurve.m_Curve.Array.data[1].tangentMode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
@@ -4874,6 +4902,10 @@ PrefabInstance:
       propertyPath: 'moveBackAudio.Array.data[3]'
       value: 
       objectReference: {fileID: 8300000, guid: 55c6c6cb15533c5408cfa5b4a96f0567, type: 3}
+    - target: {fileID: 3268913090900188972, guid: 829fff8cde39ff04e909ef6723269ba4, type: 3}
+      propertyPath: m_Volume
+      value: 0.573
+      objectReference: {fileID: 0}
     - target: {fileID: 4307901193609489207, guid: 829fff8cde39ff04e909ef6723269ba4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

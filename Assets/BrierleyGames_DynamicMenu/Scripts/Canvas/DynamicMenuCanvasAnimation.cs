@@ -197,6 +197,7 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         //clamped > 0
         transform.localScale = Vector3.Max (Vector3.Lerp(animStartingScale, targetScale, sizeCurve.Evaluate(animationJourney)), Vector3.zero);
         //clamped between 0 and 1
+
         canvasObject.alpha = Mathf.Clamp(animStartingFade + (targetFade - animStartingFade) * alphaCurve.Evaluate(animationJourney), minFade, maxFade);
     }
 
@@ -260,8 +261,14 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         animStartingPosition = GetInactivePosition();
         targetPosition = GetActivePosition();
 
+
+
+        animStartingFade = GetInactiveFade();
         //set start and end fade
-        animStartingFade  = GetInactiveFade();
+        if ((animateFadeType == FadeType.Instant))
+        {
+            animStartingFade = GetActiveFade();
+        }
         targetFade = GetActiveFade();
 
         //set start and end scale
@@ -287,6 +294,10 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
         //set start and end fade
         animStartingFade  = GetActiveFade();
+        if ((animateFadeType == FadeType.Instant) || (seperateFadeOutType && animateOutFadeType == FadeType.Instant))
+        {
+            animStartingFade = GetInactiveFade();
+        }
         targetFade = GetInactiveFade();
 
         //set start and end scale
