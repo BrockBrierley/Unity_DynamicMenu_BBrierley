@@ -193,7 +193,7 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
         //Lerp this canvas
         //unclamped
-        transform.localPosition = Vector3.Lerp(animStartingPosition, targetPosition, movementCurve.Evaluate(animationJourney));
+        transform.localPosition = Vector3.LerpUnclamped(animStartingPosition, targetPosition, movementCurve.Evaluate(animationJourney));
         //clamped > 0
         transform.localScale = Vector3.Max (Vector3.Lerp(animStartingScale, targetScale, sizeCurve.Evaluate(animationJourney)), Vector3.zero);
         //clamped between 0 and 1
@@ -222,7 +222,7 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
 
         //do not override above if moving into position
-        if (!animatingIntoPosition) return;
+        if (animatingIntoPosition) return;
 
         //Movement Curve
         if (seperateAnimateOutDirectionCurve)
@@ -455,6 +455,34 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
         bool showAnimationSettings = false;
         bool showFadeSettings = false;
         bool showGrowSettings = false;
+
+        //animation curves
+        SerializedProperty directionCurve;
+        SerializedProperty directionOutCurve;
+
+        SerializedProperty fadeCurve;
+        SerializedProperty fadeOutCurve;
+
+        SerializedProperty growCurve;
+        SerializedProperty growOutCurve;
+
+        public void OnEnable()
+        {
+            //movement
+            directionCurve = serializedObject.FindProperty("directionCurve");
+            directionOutCurve = serializedObject.FindProperty("directionOutCurve");
+
+
+            //fade
+            fadeCurve = serializedObject.FindProperty("fadeCurve");
+            fadeOutCurve = serializedObject.FindProperty("fadeOutCurve");
+
+            //grow
+            growCurve = serializedObject.FindProperty("growCurve");
+            growOutCurve = serializedObject.FindProperty("growOutCurve");
+        }
+
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -470,31 +498,26 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
             if (showAnimationSettings)
             {
-                if (dynamicMenuCanvasAnimationEditor.seperateAnimateOutDirection)
-                {
-                    //directionStyle
-                    serializedObject.FindProperty("animateDirection").enumValueIndex = (int)(AnimationDirection)EditorGUILayout.EnumPopup("Animation From Direction", dynamicMenuCanvasAnimationEditor.animateDirection);
-                }
-                else
-                {
-                    serializedObject.FindProperty("animateDirection").enumValueIndex = (int)(AnimationDirection)EditorGUILayout.EnumPopup("Animation From/To Direction", dynamicMenuCanvasAnimationEditor.animateDirection);
+                serializedObject.FindProperty("animateDirection").enumValueIndex = (int)(AnimationDirection)EditorGUILayout.EnumPopup("Animation From Direction", dynamicMenuCanvasAnimationEditor.animateDirection);
 
-                }
                 serializedObject.FindProperty("seperateAnimateOutDirection").boolValue = EditorGUILayout.Toggle("Seperate Animate Out Direction?", dynamicMenuCanvasAnimationEditor.seperateAnimateOutDirection);
                 //only show if above variable is selected
                 if (dynamicMenuCanvasAnimationEditor.seperateAnimateOutDirection)
                 {
                     serializedObject.FindProperty("animateOutDirection").enumValueIndex = (int)(AnimationDirection)EditorGUILayout.EnumPopup("Animate out To Direction", dynamicMenuCanvasAnimationEditor.animateOutDirection);
+                    serializedObject.ApplyModifiedProperties();
                 }
 
                 //curve settings
-                serializedObject.FindProperty("directionCurve").animationCurveValue = EditorGUILayout.CurveField("Animation Curve", dynamicMenuCanvasAnimationEditor.directionCurve);
+                EditorGUILayout.PropertyField(directionCurve);
                 serializedObject.FindProperty("seperateAnimateOutDirectionCurve").boolValue = EditorGUILayout.Toggle("Seperate Animate Out Curve?", dynamicMenuCanvasAnimationEditor.seperateAnimateOutDirectionCurve);
                 if (dynamicMenuCanvasAnimationEditor.seperateAnimateOutDirectionCurve)
                 {
-                    serializedObject.FindProperty("directionOutCurve").animationCurveValue = EditorGUILayout.CurveField("Animate out Curve", dynamicMenuCanvasAnimationEditor.directionOutCurve);
-                }
+                    EditorGUILayout.PropertyField(directionOutCurve);
+                    serializedObject.ApplyModifiedProperties();
+                } 
             }
+            serializedObject.ApplyModifiedProperties();
             EditorGUILayout.EndFoldoutHeaderGroup();
 
 
@@ -510,16 +533,19 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
                 if (dynamicMenuCanvasAnimationEditor.seperateFadeOutType)
                 {
                     serializedObject.FindProperty("animateOutFadeType").enumValueIndex = (int)(FadeType)EditorGUILayout.EnumPopup("Fade Out Type", dynamicMenuCanvasAnimationEditor.animateOutFadeType);
+                    serializedObject.ApplyModifiedProperties();
                 }
 
                 //curve settings
-                serializedObject.FindProperty("fadeCurve").animationCurveValue = EditorGUILayout.CurveField("Fade Curve", dynamicMenuCanvasAnimationEditor.fadeCurve);
+                EditorGUILayout.PropertyField(fadeCurve);
                 serializedObject.FindProperty("seperateFadeCurve").boolValue = EditorGUILayout.Toggle("Seperate Fade Out Curve?", dynamicMenuCanvasAnimationEditor.seperateFadeCurve);
                 if (dynamicMenuCanvasAnimationEditor.seperateFadeCurve)
                 {
-                    serializedObject.FindProperty("fadeOutCurve").animationCurveValue = EditorGUILayout.CurveField("Fade out Curve", dynamicMenuCanvasAnimationEditor.fadeOutCurve);
+                    EditorGUILayout.PropertyField(fadeOutCurve);
+                    serializedObject.ApplyModifiedProperties();
                 }
             }
+            serializedObject.ApplyModifiedProperties();
             EditorGUILayout.EndFoldoutHeaderGroup();
 
 
@@ -531,30 +557,25 @@ public class DynamicMenuCanvasAnimation : MonoBehaviour
 
             if (showGrowSettings)
             {
-                if (dynamicMenuCanvasAnimationEditor.seperateGrowOutType)
-                {
-                    serializedObject.FindProperty("animateGrowType").enumValueIndex = (int)(GrowType)EditorGUILayout.EnumPopup("Animate Size From", dynamicMenuCanvasAnimationEditor.animateGrowType);
-
-                }
-                else
-                {
-                    serializedObject.FindProperty("animateGrowType").enumValueIndex = (int)(GrowType)EditorGUILayout.EnumPopup("Animate Size From/To", dynamicMenuCanvasAnimationEditor.animateGrowType);
-                }
+                serializedObject.FindProperty("animateGrowType").enumValueIndex = (int)(GrowType)EditorGUILayout.EnumPopup("Animate Size From", dynamicMenuCanvasAnimationEditor.animateGrowType);
                 serializedObject.FindProperty("seperateGrowOutType").boolValue = EditorGUILayout.Toggle("Seperate Grow Out Type?", dynamicMenuCanvasAnimationEditor.seperateGrowOutType);
                 //only show if above variable is selected
                 if (dynamicMenuCanvasAnimationEditor.seperateGrowOutType)
                 {
                     serializedObject.FindProperty("animateOutGrowType").enumValueIndex = (int)(GrowType)EditorGUILayout.EnumPopup("Animate Size To", dynamicMenuCanvasAnimationEditor.animateOutGrowType);
+                    serializedObject.ApplyModifiedProperties();
                 }
 
                 //curve settings
-                serializedObject.FindProperty("growCurve").animationCurveValue = EditorGUILayout.CurveField("Grow Curve", dynamicMenuCanvasAnimationEditor.growCurve);
+                EditorGUILayout.PropertyField(growCurve);
                 serializedObject.FindProperty("seperateGrowCurve").boolValue = EditorGUILayout.Toggle("Seperate Grow Out Curve?", dynamicMenuCanvasAnimationEditor.seperateGrowCurve);
                 if (dynamicMenuCanvasAnimationEditor.seperateGrowCurve)
                 {
-                    serializedObject.FindProperty("growOutCurve").animationCurveValue = EditorGUILayout.CurveField("Grow out Curve", dynamicMenuCanvasAnimationEditor.growOutCurve);
+                    EditorGUILayout.PropertyField(growOutCurve);
+                    serializedObject.ApplyModifiedProperties();
                 }
             }
+            serializedObject.ApplyModifiedProperties();
             EditorGUILayout.EndFoldoutHeaderGroup();
 
             serializedObject.ApplyModifiedProperties();
