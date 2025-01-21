@@ -3922,11 +3922,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
       propertyPath: seperateFadeOutType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
       propertyPath: seperateGrowOutType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
       propertyPath: animationTimeInSeconds
