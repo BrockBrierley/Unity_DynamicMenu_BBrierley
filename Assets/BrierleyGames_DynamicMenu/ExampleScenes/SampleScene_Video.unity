@@ -128,9 +128,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 776378015}
     m_Modifications:
     - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: selectSoundType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: customSounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
       propertyPath: transitionTimeInSeconds
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: 'customSounds.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 0b5313075f9cf0947b0153e1b460dafb, type: 3}
     - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
       propertyPath: lerpAnimationCurve.m_Curve.Array.data[0].inSlope
       value: 0
@@ -1496,10 +1508,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -2338,6 +2350,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: seperateRotationCurve
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: customSounds.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
       propertyPath: transitionTimeInSeconds
       value: 0.3
       objectReference: {fileID: 0}
@@ -2345,6 +2365,10 @@ PrefabInstance:
       propertyPath: MiddleAnimationEventTime
       value: 0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
+      propertyPath: 'customSounds.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: b8fe32be7ad90df41ae087fc3ee1a7b0, type: 3}
     - target: {fileID: 2880294607422878099, guid: febe876f4d61a714e92a06f464ff1ede, type: 3}
       propertyPath: lerpAnimationCurve.m_Curve.Array.data[0].inSlope
       value: 0
@@ -3877,6 +3901,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
+      propertyPath: startInactive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
       propertyPath: animStartPoint
       value: 1
       objectReference: {fileID: 0}
@@ -3885,17 +3913,37 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
+      propertyPath: seperateFadeCurve
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
+      propertyPath: seperateGrowCurve
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
+      propertyPath: seperateFadeOutType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
+      propertyPath: seperateGrowOutType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
       propertyPath: animationTimeInSeconds
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
       propertyPath: seperateAnimateOutDirection
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
       propertyPath: connectedCameraTargetPosition
       value: 
       objectReference: {fileID: 1205919781}
+    - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
+      propertyPath: seperateAnimateOutDirectionCurve
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 632448533840354072, guid: 73895d01be86cab4c8a47308ceab5522, type: 3}
       propertyPath: fadeCurve.m_Curve.Array.data[0].inSlope
       value: 0
