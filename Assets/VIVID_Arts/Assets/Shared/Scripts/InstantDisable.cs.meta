@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5ecb93b9c60210940a09bdeba7b97e7c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 231674
+  packageName: Mountain Lake - Forest Pack
+  packageVersion: 1.1.0
+  assetPath: Assets/VIVID_Arts/Assets/Shared/Scripts/InstantDisable.cs
+  uploadId: 686963

@@ -1,0 +1,16 @@
+﻿
+Mountain Lake - Rock & Tree Pack is governed by the Standard Unity Asset Store EULA. A small number of included assets are sourced from third parties and are governed under custom licenses. Third party assets and their corresponding licenses are noted below.
+
+==========================================
+
+PolyHaven
+---------------
+
+CC0 (Public Domain Dedication)
+https://polyhaven.com/license
+
+PolyHaven assets are licensed under CC0 and are effectively dedicated to the Public Domain, even in jurisdictions that do not support the Public Domain. Commercial use is allowed and attribution is not required. For more information, follow the URL above.
+
+All PolyHaven assets included with Mountain Lake are stored in folders named PolyHaven. This includes 2 tiled PBR ground texture sets and 1 HDRI sky texture.
+
+==========================================

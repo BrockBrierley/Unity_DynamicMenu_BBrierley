@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: a1c1f4a98fa73c24c95f13ea5a8f7945
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 231674
+  packageName: Mountain Lake - Forest Pack
+  packageVersion: 1.1.0
+  assetPath: Assets/VIVID_Arts/Assets/Shared/Scripts/ShaderManager.cs
+  uploadId: 686963
